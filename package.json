@@ -9,6 +9,7 @@
   },
   "scripts": {
     "lint": "tsc",
+    "prepublish": "rimraf dist && pnpm build",
     "build": "tsup --format esm",
     "clean:all": "rimraf dist node_modules"
   },
