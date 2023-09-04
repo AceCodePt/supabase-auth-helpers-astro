@@ -2,8 +2,8 @@
   "name": "supabase-auth-helpers-astro",
   "version": "0.0.2",
   "description": "A collection of framework specific Auth utilities for working with Supabase.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "publishConfig": {
     "access": "public"
   },
