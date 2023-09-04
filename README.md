@@ -12,11 +12,13 @@ This library supports the following tooling versions:
 
 - Node.js: `^16.15.0`
 
-To install the package, you can use npm:
+To install the package, you can use pnpm:
 
 ```bash
 pnpm install supabase-auth-helpers-astro
 ```
+
+To install the package, you can use npm:
 
 ```bash
 npm install supabase-auth-helpers-astro
