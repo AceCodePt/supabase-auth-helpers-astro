@@ -1,3 +1,5 @@
+# supabase-auth-helpers-astro
+
 `supabase-auth-helpers-astro` is an NPM package that provides authentication utility functions for integrating Supabase authentication seamlessly into Astro framework applications.
 
 ## Features
