@@ -48,8 +48,8 @@ export function createServerComponentClient<
     cookies: AstroCookies;
   },
   {
-    supabaseUrl = import.meta.env.SUPABASE_URL,
-    supabaseKey = import.meta.env.SUPABASE_KEY,
+    supabaseUrl,
+    supabaseKey,
     options,
     cookieOptions,
   }: {

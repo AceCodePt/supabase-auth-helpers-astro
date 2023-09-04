@@ -19,8 +19,8 @@ export function createClientComponentClient<
     ? Database[SchemaName]
     : any
 >({
-  supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL,
-  supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY,
+  supabaseUrl,
+  supabaseKey,
   options,
   cookieOptions,
   isSingleton = true,

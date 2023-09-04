@@ -69,8 +69,8 @@ import {
 
 // Example usage of createClientComponentClient
 const clientComponentClient = createClientComponentClient({
-  supabaseUrl: "your-supabase-url", // Optional: will default to import.meta.env.PUBLIC_SUPABASE_URL
-  supabaseKey: "your-supabase-key", // Optional: will default to import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+  supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+  supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
 });
 
 // Example usage of createServerComponentClient could also be on routes
@@ -79,8 +79,8 @@ const serverComponentClient = createServerComponentClient(
     cookies: Astro.cookies,
   },
   {
-    supabaseUrl: "your-supabase-url", // Optional: will default to import.meta.env.SUPABASE_URL
-    supabaseKey: "your-supabase-key", // Optional: will default to import.meta.env.SUPABASE_ANON_KEY
+    supabaseUrl: import.meta.env.SUPABASE_URL,
+    supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
   }
 );
 
@@ -91,8 +91,8 @@ const serverRouteClient = createServerRouteClient(
     response: { headers: astroContext.response.headers },
   },
   {
-    supabaseUrl: "your-supabase-url", // Optional: will default to import.meta.env.SUPABASE_URL
-    supabaseKey: "your-supabase-key", // Optional: will default to import.meta.env.SUPABASE_ANON_KEY
+    supabaseUrl: import.meta.env.SUPABASE_URL,
+    supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
   }
 );
 ```

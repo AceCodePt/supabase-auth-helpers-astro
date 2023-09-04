@@ -80,8 +80,8 @@ export function createServerRouteClient<
     response: { headers: Response["headers"] };
   },
   {
-    supabaseUrl = import.meta.env.SUPABASE_URL,
-    supabaseKey = import.meta.env.SUPABASE_KEY,
+    supabaseUrl,
+    supabaseKey,
     options,
     cookieOptions,
   }: {
