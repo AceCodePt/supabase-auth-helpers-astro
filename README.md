@@ -68,33 +68,36 @@ import {
 } from "supabase-auth-helpers-astro";
 
 // Example usage of createClientComponentClient
-const clientComponentClient = createClientComponentClient({
-  supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
-  supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-});
+export const clientComponentClient = () =>
+  createClientComponentClient({
+    supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+    supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  });
 
 // Example usage of createServerComponentClient could also be on routes
-const serverComponentClient = createServerComponentClient(
-  {
-    cookies: Astro.cookies,
-  },
-  {
-    supabaseUrl: import.meta.env.SUPABASE_URL,
-    supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
-  }
-);
+export const serverComponentClient = () =>
+  createServerComponentClient(
+    {
+      cookies: Astro.cookies,
+    },
+    {
+      supabaseUrl: import.meta.env.SUPABASE_URL,
+      supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
+    }
+  );
 
 // Example usage of createServerRouteClient I recommed to use (createServerComponentClient)
-const serverRouteClient = createServerRouteClient(
-  {
-    request: { headers: astroContext.request.headers },
-    response: { headers: astroContext.response.headers },
-  },
-  {
-    supabaseUrl: import.meta.env.SUPABASE_URL,
-    supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
-  }
-);
+export const serverRouteClient = (req: Request, res: Response) =>
+  createServerRouteClient(
+    {
+      request: req,
+      response: res,
+    },
+    {
+      supabaseUrl: import.meta.env.SUPABASE_URL,
+      supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
+    }
+  );
 ```
 
 For more detailed usage examples and configuration options, please refer to the official documentation.
