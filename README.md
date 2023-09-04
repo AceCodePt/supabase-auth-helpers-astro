@@ -75,10 +75,10 @@ export const clientComponentClient = () =>
   });
 
 // Example usage of createServerComponentClient could also be on routes
-export const serverComponentClient = () =>
+export const serverComponentClient = (cookies: AstroCookies) =>
   createServerComponentClient(
     {
-      cookies: Astro.cookies,
+      cookies,
     },
     {
       supabaseUrl: import.meta.env.SUPABASE_URL,
