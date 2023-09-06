@@ -61,10 +61,12 @@ export default defineConfig({
 Here's an example of how you can use the package in your Astro application:
 
 ```javascript
+import { AstroCookies } from "astro";
 import {
   createClientComponentClient,
   createServerComponentClient,
   createServerRouteClient,
+  createServerMiddlewareClient
 } from "supabase-auth-helpers-astro";
 
 // Example usage of createClientComponentClient
@@ -73,6 +75,7 @@ export const clientComponentClient = () =>
     supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
     supabaseKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
   });
+
 
 // Example usage of createServerComponentClient could also be on routes
 export const serverComponentClient = (cookies: AstroCookies) =>
@@ -83,12 +86,24 @@ export const serverComponentClient = (cookies: AstroCookies) =>
     {
       supabaseUrl: import.meta.env.SUPABASE_URL,
       supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
-    }
+    },
   );
 
 // Example usage of createServerRouteClient I recommed to use (createServerComponentClient)
-export const serverRouteClient = (req: Request, res: Response) =>
+export const serverRouteClient = (cookies: AstroCookies) =>
   createServerRouteClient(
+    {
+      cookies,
+    },
+    {
+      supabaseUrl: import.meta.env.SUPABASE_URL,
+      supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
+    },
+  );
+
+// Example usage of createServerMiddlewareClient could also be on routes
+export const serverMiddlewareClient = (req: Request, res: Response) =>
+  createServerMiddlewareClient(
     {
       request: req,
       response: res,
@@ -96,20 +111,30 @@ export const serverRouteClient = (req: Request, res: Response) =>
     {
       supabaseUrl: import.meta.env.SUPABASE_URL,
       supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
-    }
+    },
   );
+```
 
-// Example usage of createServerMiddlewareClient could also be on routes
-export const serverMiddlewareClient = (cookies: AstroCookies) =>
-  createServerMiddlewareClient(
+Whoever uses SSR needs to have a middleware to refresh the tokens at `src/middleware.ts`:
+```ts
+import { defineMiddleware } from "astro:middleware";
+
+// `context` and `next` are automatically typed
+export const onRequest = defineMiddleware(async (context, next) => {
+  const res = await next();
+  const supabase = createServerMiddlewareClient(
     {
-      cookies,
+      request: req,
+      response: res,
     },
     {
       supabaseUrl: import.meta.env.SUPABASE_URL,
       supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
-    }
+    },
   );
+  await supabase.auth.getSession();
+  return res;
+});
 ```
 
 For more detailed usage examples and configuration options, please refer to the official documentation.

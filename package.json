@@ -1,6 +1,6 @@
 {
   "name": "supabase-auth-helpers-astro",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A collection of framework specific Auth utilities for working with Supabase.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
