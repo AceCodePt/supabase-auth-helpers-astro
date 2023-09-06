@@ -1,18 +1,21 @@
 import {
   CookieAuthStorageAdapter,
   createSupabaseClient,
+  parseCookies,
+  serializeCookie,
   type CookieOptions,
   type CookieOptionsWithName,
   type SupabaseClientOptionsWithoutAuth,
 } from "@supabase/auth-helpers-shared";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
-import type { AstroCookies } from "astro";
+import { splitCookiesString } from "set-cookie-parser";
 
-class AstroServerComponentAuthStorageAdapter extends CookieAuthStorageAdapter {
+class AstroServerRouteAuthStorageAdapter extends CookieAuthStorageAdapter {
   constructor(
     private readonly context: {
-      cookies: AstroCookies;
+      request: { headers: Request["headers"] };
+      response: { headers: Response["headers"] };
     },
     cookieOptions?: CookieOptions
   ) {
@@ -20,22 +23,50 @@ class AstroServerComponentAuthStorageAdapter extends CookieAuthStorageAdapter {
   }
 
   protected getCookie(name: string): string | null | undefined {
-    const astroCookies = this.context.cookies;
-    return astroCookies.get(name)?.value;
+    const setCookie = splitCookiesString(
+      this.context.response.headers.get("set-cookie")?.toString() ?? ""
+    )
+      .map((c) => parseCookies(c)[name])
+      .find((c) => !!c);
+
+    if (setCookie) {
+      return setCookie;
+    }
+
+    const cookies = parseCookies(
+      this.context.request.headers.get("cookie") ?? ""
+    );
+    return cookies[name];
   }
   protected setCookie(name: string, value: string): void {
-    const astroCookies = this.context.cookies;
-    astroCookies.set(name, value, this.cookieOptions);
+    this._setCookie(name, value);
   }
   protected deleteCookie(name: string): void {
-    const astroCookies = this.context.cookies;
-    astroCookies.set(name, "", {
+    this._setCookie(name, "", {
       maxAge: 0,
     });
   }
+
+  private _setCookie(
+    name: string,
+    value: string,
+    options?: Partial<CookieOptions>
+  ) {
+    const newSessionStr = serializeCookie(name, value, {
+      ...this.cookieOptions,
+      ...options,
+      // Allow supabase-js on the client to read the cookie as well
+      httpOnly: false,
+    });
+
+    if (this.context.response.headers) {
+      this.context.response.headers.append("set-cookie", newSessionStr);
+      this.context.response.headers.append("cookie", newSessionStr);
+    }
+  }
 }
 
-export function createServerRouteClient<
+export function createServerMiddlewareClient<
   Database = any,
   SchemaName extends string & keyof Database = "public" extends keyof Database
     ? "public"
@@ -45,7 +76,8 @@ export function createServerRouteClient<
     : any
 >(
   context: {
-    cookies: AstroCookies;
+    request: { headers: Request["headers"] };
+    response: { headers: Response["headers"] };
   },
   {
     supabaseUrl,
@@ -79,10 +111,7 @@ export function createServerRouteClient<
       },
       auth: {
         storageKey: cookieOptions?.name,
-        storage: new AstroServerComponentAuthStorageAdapter(
-          context,
-          cookieOptions
-        ),
+        storage: new AstroServerRouteAuthStorageAdapter(context, cookieOptions),
       },
     }
   );

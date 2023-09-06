@@ -98,6 +98,18 @@ export const serverRouteClient = (req: Request, res: Response) =>
       supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
     }
   );
+
+// Example usage of createServerMiddlewareClient could also be on routes
+export const serverMiddlewareClient = (cookies: AstroCookies) =>
+  createServerMiddlewareClient(
+    {
+      cookies,
+    },
+    {
+      supabaseUrl: import.meta.env.SUPABASE_URL,
+      supabaseKey: import.meta.env.SUPABASE_ANON_KEY,
+    }
+  );
 ```
 
 For more detailed usage examples and configuration options, please refer to the official documentation.

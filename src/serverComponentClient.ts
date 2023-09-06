@@ -23,15 +23,11 @@ class AstroServerComponentAuthStorageAdapter extends CookieAuthStorageAdapter {
     const astroCookies = this.context.cookies;
     return astroCookies.get(name)?.value;
   }
-  protected setCookie(name: string, value: string): void {
-    const astroCookies = this.context.cookies;
-    astroCookies.set(name, value, this.cookieOptions);
+  protected setCookie(_name: string, _value: string): void {
+    // Server Components cannot set cookies. Must use Middleware or Route Handler
   }
-  protected deleteCookie(name: string): void {
-    const astroCookies = this.context.cookies;
-    astroCookies.set(name, "", {
-      maxAge: 0,
-    });
+  protected deleteCookie(_name: string): void {
+    // Server Components cannot set cookies. Must use Middleware or Route Handler
   }
 }
 
